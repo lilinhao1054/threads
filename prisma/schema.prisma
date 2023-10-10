@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String      @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId           String      @unique
+  username          String      @unique
+  name              String
+  image             String?
+  bio               String?
+  onboarded         Boolean     @default(false)
+  threads           Thread[]
+  createdCommunitys Community[] @relation("creator")
+  communityIds      String[]    @db.ObjectId
+  communities       Community[] @relation("member", fields: [communityIds], references: [id])
+}
+
+model Thread {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  text        String
+  createdAt   DateTime   @default(now())
+  parentId    String?    @db.ObjectId
+  parent      Thread?    @relation("ParentChildren", fields: [parentId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  children    Thread[]   @relation("ParentChildren")
+  authorId    String     @db.ObjectId
+  author      User       @relation(fields: [authorId], references: [id])
+  communityId String?    @db.ObjectId
+  community   Community? @relation(fields: [communityId], references: [id])
+}
+
+model Community {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String   @unique
+  name      String
+  image     String?
+  bio       String?
+  threads   Thread[]
+  creatorId String   @db.ObjectId
+  createdBy User     @relation("creator", fields: [creatorId], references: [id])
+  memberIds String[] @db.ObjectId
+  members   User[]   @relation("member", fields: [memberIds], references: [id])
+}
