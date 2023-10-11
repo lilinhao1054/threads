@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// import { fetchCommunityPosts } from "@/lib/actions/community.actions";
+import { fetchCommunityPosts } from "@/lib/actions/community.actions";
 import { fetchUserPosts } from "@/lib/actions/user.actions";
 
 import ThreadCard from "../cards/ThreadCard";
@@ -16,10 +16,10 @@ interface Result {
     author: {
       name: string;
       image: string | null;
-      id: string;
+      clerkId: string;
     };
     community: {
-      id: string;
+      clerkId: string;
       name: string;
       image: string | null;
     } | null;
@@ -42,8 +42,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
   let result: Result;
 
   if (accountType === "Community") {
-    // result = await fetchCommunityPosts(accountId);
-    result = await fetchUserPosts(accountId);
+    result = await fetchCommunityPosts(accountId);
   } else {
     result = await fetchUserPosts(accountId);
   }
@@ -71,12 +70,16 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
               : {
                   name: thread.author.name,
                   image: thread.author.image,
-                  clerkId: thread.author.id,
+                  clerkId: thread.author.clerkId,
                 }
           }
           community={
             accountType === "Community"
-              ? { name: result.name, id: result.clerkId, image: result.image }
+              ? {
+                  name: result.name,
+                  clerkId: result.clerkId,
+                  image: result.image,
+                }
               : thread.community
           }
           createdAt={thread.createdAt}

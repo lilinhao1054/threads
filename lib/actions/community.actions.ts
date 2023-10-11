@@ -44,11 +44,11 @@ export const fetchCommunities = async ({
   }
 };
 
-export const fetchCommunityDetails = async (id: string) => {
+export const fetchCommunityDetails = async (clerkId: string) => {
   try {
     return await prisma.community.findUniqueOrThrow({
       where: {
-        id,
+        clerkId,
       },
       include: {
         createdBy: true,
@@ -58,6 +58,30 @@ export const fetchCommunityDetails = async (id: string) => {
     });
   } catch (error: any) {
     throw new Error(`Failed to fetch community details: ${error.message}`);
+  }
+};
+
+export const fetchCommunityPosts = async (communityId: string) => {
+  try {
+    let threads = await prisma.thread.findMany({
+      where: { communityId },
+      include: {
+        author: true,
+        community: true,
+        children: {
+          include: {
+            author: true,
+          },
+        },
+      },
+    });
+    threads = threads.filter((threads) => !threads.parentId);
+    const community = await prisma.community.findUniqueOrThrow({
+      where: { id: communityId },
+    });
+    return { ...community, threads };
+  } catch (error: any) {
+    throw new Error(`Failed to fetch community's posts: ${error.message}`);
   }
 };
 

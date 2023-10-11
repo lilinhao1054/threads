@@ -13,7 +13,7 @@ interface Props {
     clerkId: string;
   };
   community?: {
-    id: string;
+    clerkId: string;
     name: string;
     image: string | null;
   } | null;
@@ -145,25 +145,25 @@ const ThreadCard = ({
         </div>
       )}
 
-      {/* {!isComment && community && (
+      {!isComment && community && (
         <Link
-          href={`/communities/${community.id}`}
+          href={`/communities/${community.clerkId}`}
           className="mt-5 flex items-center"
         >
           <p className="text-subtle-medium text-gray-1">
-            {formatDateString(createdAt)}
+            {formatDateString(createdAt.toDateString())}
             {community && ` - ${community.name} Community`}
           </p>
 
           <Image
-            src={community.image}
+            src={community.image as string}
             alt={community.name}
             width={14}
             height={14}
             className="ml-1 rounded-full object-cover"
           />
         </Link>
-      )} */}
+      )}
     </article>
   );
 };
