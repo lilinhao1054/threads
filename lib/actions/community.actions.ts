@@ -67,10 +67,18 @@ export const createCommunity = async (
   username: string,
   image: string,
   bio: string,
-  createdById: string
+  creatorId: string
 ) => {
   try {
-    // todo
+    await prisma.community.create({
+      data: {
+        name,
+        username,
+        image,
+        bio,
+        creatorId,
+      },
+    });
   } catch (error: any) {
     throw new Error(`Failed to create community: ${error.message}`);
   }
@@ -78,7 +86,7 @@ export const createCommunity = async (
 
 export const deleteCommunity = async (communityId: string) => {
   try {
-    // todo
+    await prisma.community.delete({ where: { id: communityId } });
   } catch (error: any) {
     throw new Error(`Failed to delete community: ${error.message}`);
   }
@@ -87,11 +95,20 @@ export const deleteCommunity = async (communityId: string) => {
 export const updateCommunityInfo = async (
   communityId: string,
   name: string,
-  usesrname: string,
+  username: string,
   image: string
 ) => {
   try {
-    // todo
+    await prisma.community.update({
+      where: {
+        id: communityId,
+      },
+      data: {
+        name,
+        username,
+        image,
+      },
+    });
   } catch (error: any) {
     throw new Error(`Failed to update community info: ${error.message}`);
   }
@@ -102,7 +119,16 @@ export const addMemberToCommunity = async (
   memberId: string
 ) => {
   try {
-    // todo
+    await prisma.community.update({
+      where: {
+        id: communityId,
+      },
+      data: {
+        members: {
+          connect: [{ id: memberId }],
+        },
+      },
+    });
   } catch (error: any) {
     throw new Error(`Failed to add member to community: ${error.message}`);
   }
@@ -113,7 +139,16 @@ export const removeUserFromCommunity = async (
   communityId: string
 ) => {
   try {
-    // todo
+    await prisma.community.update({
+      where: {
+        id: communityId,
+      },
+      data: {
+        members: {
+          disconnect: [{ id: userId }],
+        },
+      },
+    });
   } catch (error: any) {
     throw new Error(`Failed to remove user from community: ${error.message}`);
   }
