@@ -128,7 +128,7 @@ export const addMemberToCommunity = async (
       },
       data: {
         members: {
-          connect: [{ id: memberId }],
+          connect: [{ clerkId: memberId }],
         },
       },
     });
@@ -148,7 +148,7 @@ export const removeUserFromCommunity = async (
       },
       data: {
         members: {
-          disconnect: [{ id: userId }],
+          disconnect: [{ clerkId: userId }],
         },
       },
     });

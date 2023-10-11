@@ -6,7 +6,13 @@ import { User } from "@clerk/nextjs/server";
 const Onboarding = async () => {
   const user = (await currentUser()) as User;
 
-  const userInfo = await fetchUser(user?.id as string);
+  let userInfo;
+
+  try {
+    userInfo = await fetchUser(user?.id as string);
+  } catch (error) {
+    console.log(error);
+  }
 
   const userData = {
     id: userInfo?.id,
