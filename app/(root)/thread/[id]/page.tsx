@@ -19,7 +19,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
   return (
     <section className="relative">
       <div>
-        <ThreadCard {...thread} />
+        <ThreadCard {...thread} currentUserId={user.id} />
       </div>
       <div className="mt-7">
         <Comment
@@ -31,7 +31,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
       <div className="mt-10">
         {thread.children.map((childItem) => (
-          <ThreadCard {...childItem} isComment />
+          <ThreadCard {...childItem} isComment={true} />
         ))}
       </div>
     </section>

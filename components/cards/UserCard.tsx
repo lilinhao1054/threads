@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 
 interface Props {
-  id: string;
+  clerkId: string;
   name: string;
   username: string;
   imgUrl: string;
   personType: string;
 }
 
-function UserCard({ id, name, username, imgUrl, personType }: Props) {
+function UserCard({ clerkId, name, username, imgUrl, personType }: Props) {
   const router = useRouter();
 
   const isCommunity = personType === "Community";
@@ -40,9 +40,9 @@ function UserCard({ id, name, username, imgUrl, personType }: Props) {
         className="user-card_btn"
         onClick={() => {
           if (isCommunity) {
-            router.push(`/communities/${id}`);
+            router.push(`/communities/${clerkId}`);
           } else {
-            router.push(`/profile/${id}`);
+            router.push(`/profile/${clerkId}`);
           }
         }}
       >

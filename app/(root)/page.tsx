@@ -27,7 +27,7 @@ export default async function Home({
         ) : (
           <>
             {result.posts.map((post) => (
-              <ThreadCard {...post} />
+              <ThreadCard {...post} currentUserId={user.id} />
             ))}
           </>
         )}

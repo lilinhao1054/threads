@@ -39,7 +39,7 @@ async function Page({
             {result.users.map((person) => (
               <UserCard
                 key={person.clerkId}
-                id={person.clerkId}
+                clerkId={person.clerkId}
                 name={person.name}
                 username={person.username}
                 imgUrl={person.image as string}
