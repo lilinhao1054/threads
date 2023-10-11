@@ -13,7 +13,11 @@ export default async function Home({
   const user = await currentUser();
   if (!user) return;
 
-  const userInfo = await fetchUser(user.id);
+  let userInfo;
+
+  try {
+    userInfo = await fetchUser(user.id);
+  } catch (error) {}
   if (!userInfo?.onboarded) redirect("/onboarding");
 
   const result = await fetchPosts(
