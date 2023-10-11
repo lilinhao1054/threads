@@ -63,8 +63,8 @@ export const fetchCommunityDetails = async (clerkId: string) => {
 
 export const fetchCommunityPosts = async (communityId: string) => {
   try {
-    let threads = await prisma.thread.findMany({
-      where: { communityId },
+    const threads = await prisma.thread.findMany({
+      where: { communityId, parent: null },
       include: {
         author: true,
         community: true,
@@ -75,7 +75,6 @@ export const fetchCommunityPosts = async (communityId: string) => {
         },
       },
     });
-    threads = threads.filter((threads) => !threads.parentId);
     const community = await prisma.community.findUniqueOrThrow({
       where: { id: communityId },
     });

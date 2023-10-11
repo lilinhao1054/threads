@@ -43,6 +43,7 @@ export const fetchPosts = async (pageNumber = 1, pageSize = 5) => {
   try {
     const skip = (pageNumber - 1) * pageSize;
     const take = pageSize;
+
     let posts = await prisma.thread.findMany({
       skip,
       take,
@@ -55,11 +56,15 @@ export const fetchPosts = async (pageNumber = 1, pageSize = 5) => {
         },
         community: true,
       },
+      where: {
+        parent: null,
+      },
     });
 
-    posts = posts.filter((post) => !post.parentId);
+    const total = await prisma.thread.count({
+      where: { parent: null },
+    });
 
-    const total = await prisma.thread.count();
     const hasNext = total > skip + take;
     return { posts, hasNext };
   } catch (error: any) {

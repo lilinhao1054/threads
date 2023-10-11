@@ -50,19 +50,16 @@ export const upsertUser = async ({
 
 export const fetchUser = async (clerkId: string) => {
   try {
-    let res = await prisma.user.findUniqueOrThrow({
+    return await prisma.user.findUniqueOrThrow({
       where: { clerkId },
-      include: { threads: true },
+      include: { threads: { where: { parent: null } } },
     });
-    res.threads = res.threads.filter((thread) => !thread.parentId);
-    return res;
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
   }
 };
 
 export const fetchUsers = async ({
-  userId,
   searchString = "",
   pageNumber = 1,
   pageSize = 20,
@@ -104,8 +101,8 @@ export const fetchUsers = async ({
 
 export const fetchUserPosts = async (authorId: string) => {
   try {
-    let threads = await prisma.thread.findMany({
-      where: { authorId },
+    const threads = await prisma.thread.findMany({
+      where: { authorId, parent: null },
       include: {
         author: true,
         community: true,
@@ -116,7 +113,6 @@ export const fetchUserPosts = async (authorId: string) => {
         },
       },
     });
-    threads = threads.filter((threads) => !threads.parentId);
     const author = await prisma.user.findUniqueOrThrow({
       where: { id: authorId },
     });
