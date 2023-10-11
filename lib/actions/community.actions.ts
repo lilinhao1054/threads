@@ -62,7 +62,7 @@ export const fetchCommunityDetails = async (id: string) => {
 };
 
 export const createCommunity = async (
-  id: string,
+  clerkId: string,
   name: string,
   username: string,
   image: string,
@@ -72,11 +72,14 @@ export const createCommunity = async (
   try {
     await prisma.community.create({
       data: {
+        clerkId,
         name,
         username,
         image,
         bio,
-        creatorId,
+        createdBy: {
+          connect: { clerkId: creatorId },
+        },
       },
     });
   } catch (error: any) {
@@ -86,7 +89,7 @@ export const createCommunity = async (
 
 export const deleteCommunity = async (communityId: string) => {
   try {
-    await prisma.community.delete({ where: { id: communityId } });
+    await prisma.community.delete({ where: { clerkId: communityId } });
   } catch (error: any) {
     throw new Error(`Failed to delete community: ${error.message}`);
   }
@@ -101,7 +104,7 @@ export const updateCommunityInfo = async (
   try {
     await prisma.community.update({
       where: {
-        id: communityId,
+        clerkId: communityId,
       },
       data: {
         name,
@@ -121,7 +124,7 @@ export const addMemberToCommunity = async (
   try {
     await prisma.community.update({
       where: {
-        id: communityId,
+        clerkId: communityId,
       },
       data: {
         members: {
@@ -141,7 +144,7 @@ export const removeUserFromCommunity = async (
   try {
     await prisma.community.update({
       where: {
-        id: communityId,
+        clerkId: communityId,
       },
       data: {
         members: {

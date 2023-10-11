@@ -39,6 +39,7 @@ model Thread {
 
 model Community {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId   String   @unique
   username  String   @unique
   name      String
   image     String?
